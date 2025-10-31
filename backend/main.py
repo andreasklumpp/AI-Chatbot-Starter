@@ -1,9 +1,12 @@
+import asyncio
 import json
 from custom_agents.agent_1 import Agent1
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
+from langfuse import get_client
+from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 
 load_dotenv(override=True)
 
@@ -12,7 +15,7 @@ load_dotenv(override=True)
 app = FastAPI()
 
 origins = [
-    'http://localhost:3000',
+    'http://localhost:4000',
 ]
 
 app.add_middleware(
@@ -22,6 +25,16 @@ app.add_middleware(
     allow_methods=["*"],  # Allow GET, POST, etc.
     allow_headers=["*"],
 )
+
+# Setup Langfuse
+OpenAIAgentsInstrumentor().instrument()
+langfuse = get_client()
+ 
+# Verify connection
+if langfuse.auth_check():
+    print("Langfuse client is authenticated and ready!")
+else:
+    print("Authentication failed. Please check your credentials and host.")
 
 agent1 = Agent1()
 

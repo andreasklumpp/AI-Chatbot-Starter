@@ -1,4 +1,6 @@
 from agents import Agent, Runner, SQLiteSession
+from langfuse import observe
+
 
 DB_PATH="data/assistant_sessions.db"
 
@@ -19,6 +21,7 @@ class Agent1:
             instructions=self.instructions
         )
 
+    @observe(name="Agent 1 - run")
     async def run(self, user_id: str, user_input: str) -> str:
         print(f"Agent received input: {user_input}")
         session = get_agent_session(user_id)
