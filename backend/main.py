@@ -1,7 +1,12 @@
 import json
+from backend.custom_agents.agent_1 import Agent1, JokerAgent
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
+
 
 # Create the FastAPI application instance
 app = FastAPI()
@@ -18,6 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+agent1 = Agent1()
 
 # Define a path operation (route)
 @app.get("/")
@@ -26,12 +32,17 @@ async def read_root():
 
 
 @app.post("/chat")
-async def chat_endpoint(request: dict):
-    def event_generator():
-        print("Received request:", request)
+async def chat_endpoint( request: dict):
+    print("Chat endpoint called with request:", request)
+    async def event_generator():
+        print("Received request:", request['messages'][-1])
+        print("Type of request:", type(request))
         # Placeholder: Your agent logic generates and yields events
-        yield f"data: {json.dumps({'id': '1', 'role': 'assistant', 'content': 'Hello. I am the Research Agent.'})}\n\n"
-        yield f"data: {json.dumps({'id': '2', 'role': 'assistant', 'content': 'I will now begin research...'})}\n\n"   # ... more events
-        
+        yield f"data: {json.dumps({'id': '1', 'role': 'assistant', 'content': 'Hello. I am funny. Let me tell you a joke.'})}\n\n"
+
+        joke = await agent1.run(request['user_id'], request['messages'][-1]['content'][-1]['text'])
+
+        yield f"data: {json.dumps({'id': '2', 'role': 'assistant', 'content': joke})}\n\n"   # ... more events
+
     # Set media_type to 'text/event-stream' for SSE
     return StreamingResponse(event_generator(), media_type='text/event-stream')
