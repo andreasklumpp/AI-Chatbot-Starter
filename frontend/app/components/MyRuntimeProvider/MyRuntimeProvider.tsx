@@ -15,7 +15,8 @@ const FastAPIAdapter: ChatModelAdapter = {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ messages, user_id: "user-123" }),
+      // USER ID Should come from authenticated user context
+      body: JSON.stringify({ messages, user_id: "user-123" }), 
       signal: abortSignal,
     });
 

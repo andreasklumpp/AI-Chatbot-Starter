@@ -51,8 +51,6 @@ async def chat_endpoint( request: dict):
         print("Received request:", request['messages'][-1])
         print("Type of request:", type(request))
         # Placeholder: Your agent logic generates and yields events
-        yield f"data: {json.dumps({'id': '1', 'role': 'assistant', 'content': 'Hello. I am funny. Let me tell you a joke.'})}\n\n"
-
         joke = await agent1.run(request['user_id'], request['messages'][-1]['content'][-1]['text'])
 
         yield f"data: {json.dumps({'id': '2', 'role': 'assistant', 'content': joke})}\n\n"   # ... more events
