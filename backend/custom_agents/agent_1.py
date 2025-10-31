@@ -20,7 +20,7 @@ class Agent1:
         )
 
     async def run(self, user_id: str, user_input: str) -> str:
-        print(f"JokerAgent received input: {user_input}")
+        print(f"Agent received input: {user_input}")
         session = get_agent_session(user_id)
 
         response = await Runner.run(self.agent, user_input, session=session)

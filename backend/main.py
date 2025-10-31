@@ -1,5 +1,5 @@
 import json
-from backend.custom_agents.agent_1 import Agent1, JokerAgent
+from custom_agents.agent_1 import Agent1
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
